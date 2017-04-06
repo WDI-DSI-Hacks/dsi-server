@@ -40,7 +40,7 @@ def predict_stuff():
 
     item = [int(Store), int(Dept), int(week)]
     logger.debug(json.dumps(item))
-
+    history = data.Weekly_Sales[data.Store == Store][data.Dept = Dept]
     sales = float(model.predict(item))
     logger.debug(json.dumps(sales))
 
@@ -56,5 +56,7 @@ def predict_stuff():
 
 if __name__ == '__main__':
 
+    HOST = '127.0.0.1'
+    PORT = '4000'
 
-    app.run(debug=True)
+    app.run(HOST, PORT, debug=True)
