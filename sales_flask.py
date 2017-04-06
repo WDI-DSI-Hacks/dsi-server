@@ -28,13 +28,14 @@ def hello_world():
     logger.debug('Default route')
     return app.send_static_file('sales.html')
 
-@app.route('/predict', methods=['POST'])
+
+@app.route('/predict', methods=['GET'])
 def predict_stuff():
     logger.debug('Predict route called')
 
-    Store = request.form['Store']
-    Dept = request.form['Dept']
-    week = request.form['week']
+    Store = request.args['Store']
+    Dept = request.args['Dept']
+    week = request.args['week']
 
     logger.debug('Received the following params:' + str(Store) + ' and ' + str(Dept) + ' and ' + str(week))
 
@@ -58,4 +59,5 @@ if __name__ == '__main__':
     HOST = '127.0.0.1'
     PORT = '4000'
 
-    app.run(HOST, PORT, debug=True)
+    app.run(HOST, PORT)
+    app.run(debug=True)
