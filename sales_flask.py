@@ -40,7 +40,6 @@ def predict_stuff():
 
     item = [int(Store), int(Dept), int(week)]
     logger.debug(json.dumps(item))
-    history = data.Weekly_Sales[data.Store == Store][data.Dept = Dept]
     sales = float(model.predict(item))
     logger.debug(json.dumps(sales))
 
