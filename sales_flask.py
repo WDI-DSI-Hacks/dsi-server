@@ -55,7 +55,7 @@ def predict_stuff():
         forecast.append(sales)
 
 
-    
+
     # item = [int(Store), int(Dept), int(week)]
 
     # logger.debug(json.dumps(forecast))
@@ -64,7 +64,7 @@ def predict_stuff():
 
     # logger.debug(json.dumps(sales))
 
-    results = {'Weekly Sales': forecast}
+    results = {'Weekly_Sales': forecast}
     # item = [pclass, sex, age, fare, sibsp]
     # score = PREDICTOR.predict_proba(item)
     # results = {'survival chances': score[0,1], 'death chances': score[0,0]}
