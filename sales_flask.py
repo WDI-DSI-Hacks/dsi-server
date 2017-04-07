@@ -28,6 +28,9 @@ with open('model.pkl', 'r') as picklefile:
 with open('test.pkl', 'r') as picklefile:
     test = pickle.load(picklefile)
 
+with open('unemp.pkl', 'r') as picklefile:
+    unemp = pickle.load(picklefile)
+
 @app.route('/')
 def hello_world():
     logger.debug('Default route')
@@ -44,25 +47,21 @@ def predict_stuff():
 
     logger.debug('Received the following params:' + str(Store) + ' and ' + str(Dept) )
 
+    holidays = [6,36,47,52]
+
     forecast = []
     for i in week:
         test.iloc[:,:] = 0.0
         test['s_' + str(Store)] = 1
         test['d_' + str(Dept)] = 1
         test['w_' + str(i)] = 1
+        test['Unemployment'] = float(unemp['Unemployment'][unemp['Store'] == int(Store)])
+        if i in holidays:
+            test['holiday'] = 1
         sales = float(model.predict(test))
         logger.debug(json.dumps(sales))
         forecast.append(sales)
 
-
-    
-    # item = [int(Store), int(Dept), int(week)]
-
-    # logger.debug(json.dumps(forecast))
-
-    # sales = float(model.predict(item))
-
-    # logger.debug(json.dumps(sales))
 
     results = {'Weekly Sales': forecast}
     # item = [pclass, sex, age, fare, sibsp]
