@@ -20,8 +20,13 @@ app = Flask(__name__)
 #-------- MODEL -----------#
 import pickle
 import numpy as np
+import pandas as pd
+
 with open('model.pkl', 'r') as picklefile:
     model = pickle.load(picklefile)
+
+with open('test.pkl', 'r') as picklefile:
+    test = pickle.load(picklefile)
 
 @app.route('/')
 def hello_world():
@@ -35,16 +40,31 @@ def predict_stuff():
 
     Store = request.args['Store']
     Dept = request.args['Dept']
-    week = request.args['week']
+    week = range(1,53)
 
-    logger.debug('Received the following params:' + str(Store) + ' and ' + str(Dept) + ' and ' + str(week))
+    logger.debug('Received the following params:' + str(Store) + ' and ' + str(Dept) )
 
-    item = [int(Store), int(Dept), int(week)]
-    logger.debug(json.dumps(item))
-    sales = float(model.predict(item))
-    logger.debug(json.dumps(sales))
+    forecast = []
+    for i in week:
+        test.iloc[:,:] = 0.0
+        test['s_' + str(Store)] = 1
+        test['d_' + str(Dept)] = 1
+        test['w_' + str(i)] = 1
+        sales = float(model.predict(test))
+        logger.debug(json.dumps(sales))
+        forecast.append(sales)
 
-    results = {'Weekly Sales': sales}
+
+    
+    # item = [int(Store), int(Dept), int(week)]
+
+    # logger.debug(json.dumps(forecast))
+
+    # sales = float(model.predict(item))
+
+    # logger.debug(json.dumps(sales))
+
+    results = {'Weekly Sales': forecast}
     # item = [pclass, sex, age, fare, sibsp]
     # score = PREDICTOR.predict_proba(item)
     # results = {'survival chances': score[0,1], 'death chances': score[0,0]}
