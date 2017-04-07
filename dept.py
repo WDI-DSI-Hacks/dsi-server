@@ -41,23 +41,20 @@ def hello_world():
 def predict_stuff():
     logger.debug('Predict route called')
 
-    Store = request.args['Store']
     Dept = request.args['Dept']
-    week = range(1,53)
+    week = 14
+    Store = range(1,46)
 
-    logger.debug('Received the following params:' + str(Store) + ' and ' + str(Dept) )
+    logger.debug('Received the following params:' + str(Dept) )
 
-    holidays = [6,36,47,52]
 
     forecast = []
-    for i in week:
+    for i in Store:
         test.iloc[:,:] = 0.0
-        test['s_' + str(Store)] = 1
+        test['s_' + str(i)] = 1
         test['d_' + str(Dept)] = 1
-        test['w_' + str(i)] = 1
-        test['Unemployment'] = float(unemp['Unemployment'][unemp['Store'] == int(Store)])
-        if i in holidays:
-            test['holiday'] = 1
+        test['w_' + str(week)] = 1
+        test['Unemployment'] = float(unemp['Unemployment'][unemp['Store'] == int(i)])
         sales = float(model.predict(test))
         logger.debug(json.dumps(sales))
         forecast.append(sales)
@@ -76,7 +73,7 @@ def predict_stuff():
 if __name__ == '__main__':
 
     HOST = '127.0.0.1'
-    PORT = '4000'
+    PORT = '5000'
 
     app.run(HOST, PORT)
     app.run(debug=True)
