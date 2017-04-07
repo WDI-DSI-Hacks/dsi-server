@@ -64,6 +64,33 @@ def predict_stuff():
 
 
     results = {'Weekly_Sales': forecast}
+
+    return json.dumps(results)
+
+@app.route('/dept', methods=['GET'])
+def predict_dept():
+    logger.debug('Predict route called')
+
+    dpt = request.args['Dept']
+    wk = 14
+    store = range(1,46)
+
+    logger.debug('Received the following params:' + str(dpt) )
+
+
+    dfore = []
+    for i in store:
+        test.iloc[:,:] = 0.0
+        test['s_' + str(i)] = 1
+        test['d_' + str(dpt)] = 1
+        test['w_' + str(wk)] = 1
+        test['Unemployment'] = float(unemp['Unemployment'][unemp['Store'] == int(i)])
+        dps = float(model.predict(test))
+        logger.debug(json.dumps(dps))
+        dfore.append(dps)
+
+
+    feed = {'Weekly_Sales': dfore}
     # item = [pclass, sex, age, fare, sibsp]
     # score = PREDICTOR.predict_proba(item)
     # results = {'survival chances': score[0,1], 'death chances': score[0,0]}
@@ -71,7 +98,7 @@ def predict_stuff():
 
     # my_dict = {'Store': Store, 'Department': Dept, 'week': week, 'holiday': holiday}
 
-    return json.dumps(results)
+    return json.dumps(feed)
 
 if __name__ == '__main__':
 
